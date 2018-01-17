@@ -19,18 +19,37 @@ import { AdminProductsComponent } from './admin/admin-products/admin-products.co
 import { AdminOrdersComponent } from './admin/admin-orders/admin-orders.component';
 import { LoginComponent } from './login/login.component';
 import { AuthService } from './auth.service';
+import { AuthGuard } from './auth-guard.service';
+import { UserService } from './user.service';
+import { AdminAuthGuard } from './admin-auth-guard.service';
 
 
 const routes:Routes =[
   {path:'', component:HomeComponent},
   {path:'products',component:ProductsComponent},
   {path:'shopping-cart', component:ShoppingCartComponent},
-  {path: 'check-out',component:CheckOutComponent },
-  {path: 'order-succes', component:OrderSuccesComponent},
+  
   {path:'login', component:LoginComponent},
-  {path:'admin/products', component:AdminProductsComponent},
-  {path:'admin/orders', component:AdminOrdersComponent},
-  {path:'my/orders', component:MyOrdersComponent}
+
+  {path: 'check-out',
+  component:CheckOutComponent , 
+  canActivate: [AuthGuard ]},
+
+  {path: 'order-succes', 
+  component:OrderSuccesComponent, 
+  canActivate: [AuthGuard ]},
+  
+  {path:'admin/products', 
+  component:AdminProductsComponent,
+  canActivate: [AuthGuard, AdminAuthGuard]},
+  
+  {path:'admin/orders', 
+  component:AdminOrdersComponent, 
+  canActivate: [AuthGuard,AdminAuthGuard ]},
+
+  {path:'my/orders', 
+  component:MyOrdersComponent, 
+  canActivate: [AuthGuard ]}
 
 ]
 
@@ -57,7 +76,10 @@ const routes:Routes =[
     NgbModule.forRoot()
   ],
   providers: [
-    AuthService
+    AuthService,
+    AuthGuard,
+    UserService,
+    AdminAuthGuard
   ],
   bootstrap: [AppComponent]
 })
